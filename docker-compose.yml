@@ -17,10 +17,9 @@ services:
       mysql:
         condition: service_healthy
 
-  # --- Servicio del Frontend Público ---
+  
   front:
-    build:
-      # El contexto de construcción es la raíz del monorepo para poder acceder a todo
+    build:      
       context: .
       dockerfile: ./dockerfiles/Dockerfile.frontend
       args:
@@ -29,27 +28,23 @@ services:
         APP_SOURCE_PATH: ./services/front
     container_name: ${COMPOSE_PROJECT_NAME}-front
     ports:
-      - "${FRONT_PORT}:80"
-    # El volumen para desarrollo en vivo sigue funcionando perfectamente
+      - "${FRONT_PORT}:80"    
     volumes:
       - ./services/front:/usr/share/nginx/html
     depends_on:
       - api
 
-  # --- Servicio del Dashboard de Administración ---
+  
   dashboard:
     build:
       context: .
-      dockerfile: ./dockerfiles/Dockerfile.dashboard.dev # Usamos el Dockerfile de desarrollo
+      dockerfile: ./dockerfiles/Dockerfile.dashboard.dev 
     container_name: ${COMPOSE_PROJECT_NAME}-dashboard
-    ports:
-      # Mapeamos el puerto 3002 de tu máquina al puerto 3000 del contenedor (dev server de React)
+    ports:      
       - "${DASHBOARD_PORT}:3000"
-    environment:
-      # Inyectamos la URL del API para que React la use en sus llamadas fetch/axios
+    environment:      
       - REACT_APP_API_URL=${API_BASE_URL}
-    volumes:
-      # Montamos las carpetas de código para habilitar el Hot Reloading
+    volumes:      
       - ./services/dashboard/src:/app/src
       - ./services/dashboard/public:/app/public
     depends_on:
