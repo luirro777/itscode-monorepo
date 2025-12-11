@@ -25,7 +25,7 @@ Asegúrate de tener instalado [Docker](https://www.docker.com/get-started/) y [D
 
 1.  **Clona el repositorio:**
     ```bash
-    git clone https://github.com/tu-usuario/itscode-monorepo.git
+    git clone https://github.com/luirro777/itscode-monorepo.git
     cd itscode-monorepo
     ```
 
