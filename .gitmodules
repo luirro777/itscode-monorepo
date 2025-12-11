@@ -1,0 +1,12 @@
+[submodule "services/api"]
+	path = services/api
+	url = https://github.com/rinaldisantiago/itscode-api
+	branch = deploy
+[submodule "services/front"]
+	path = services/front
+	url = https://github.com/rinaldisantiago/itscode-front
+	branch = deploy
+[submodule "services/dashboard"]
+	path = services/dashboard
+	url = https://github.com/rinaldisantiago/itscode-dashboard
+	branch = deploy
