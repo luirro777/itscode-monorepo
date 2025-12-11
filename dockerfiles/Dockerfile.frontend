@@ -1,0 +1,11 @@
+FROM nginx:alpine
+
+RUN rm /etc/nginx/conf.d/default.conf
+
+ARG NGINX_CONFIG_PATH
+
+ARG APP_SOURCE_PATH
+
+COPY ${NGINX_CONFIG_PATH} /etc/nginx/conf.d/
+
+COPY ${APP_SOURCE_PATH}/ /usr/share/nginx/html

@@ -1,0 +1,77 @@
+version: '3.8'
+
+services:
+  api:
+    build:
+      context: .
+      dockerfile: ./dockerfiles/Dockerfile.api
+    container_name: ${COMPOSE_PROJECT_NAME}-api
+    ports:
+      - "${API_PORT}:8080"
+    environment:
+      - ConnectionStrings__DefaultConnection=Server=mysql;Port=${MYSQL_PORT};Database=${MYSQL_DATABASE};User=${MYSQL_USER};Password=${MYSQL_PASSWORD};
+      - ASPNETCORE_ENVIRONMENT=${API_ENVIRONMENT}
+    #volumes:
+    #  - ./services/api:/app
+    depends_on:
+      mysql:
+        condition: service_healthy
+
+  # --- Servicio del Frontend Público ---
+  front:
+    build:
+      # El contexto de construcción es la raíz del monorepo para poder acceder a todo
+      context: .
+      dockerfile: ./dockerfiles/Dockerfile.frontend
+      args:
+        # Pasamos las rutas como argumentos de construcción
+        NGINX_CONFIG_PATH: ./nginx/front/nginx.conf
+        APP_SOURCE_PATH: ./services/front
+    container_name: ${COMPOSE_PROJECT_NAME}-front
+    ports:
+      - "${FRONT_PORT}:80"
+    # El volumen para desarrollo en vivo sigue funcionando perfectamente
+    volumes:
+      - ./services/front:/usr/share/nginx/html
+    depends_on:
+      - api
+
+  # --- Servicio del Dashboard de Administración ---
+  dashboard:
+    build:
+      context: .
+      dockerfile: ./dockerfiles/Dockerfile.dashboard.dev # Usamos el Dockerfile de desarrollo
+    container_name: ${COMPOSE_PROJECT_NAME}-dashboard
+    ports:
+      # Mapeamos el puerto 3002 de tu máquina al puerto 3000 del contenedor (dev server de React)
+      - "${DASHBOARD_PORT}:3000"
+    environment:
+      # Inyectamos la URL del API para que React la use en sus llamadas fetch/axios
+      - REACT_APP_API_URL=${API_BASE_URL}
+    volumes:
+      # Montamos las carpetas de código para habilitar el Hot Reloading
+      - ./services/dashboard/src:/app/src
+      - ./services/dashboard/public:/app/public
+    depends_on:
+      - api
+
+  mysql:
+    image: mysql:8.0
+    container_name: ${COMPOSE_PROJECT_NAME}-mysql
+    ports:
+      - "${MYSQL_PORT}:${MYSQL_PORT}"
+    environment:
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+      - MYSQL_DATABASE=${MYSQL_DATABASE}
+      - MYSQL_USER=${MYSQL_USER}
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+    volumes:
+      - mysql_data:/var/lib/mysql      
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p${MYSQL_ROOT_PASSWORD}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  mysql_data:

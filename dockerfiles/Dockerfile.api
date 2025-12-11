@@ -1,0 +1,20 @@
+FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
+WORKDIR /src
+
+COPY ["services/api/itscode.sln", "./"]
+COPY ["services/api/api-ITSCode/api-ITSCode.csproj", "api-ITSCode/"]
+COPY ["services/api/dao_library/dao_library.csproj", "dao_library/"]
+COPY ["services/api/entity_library/entity_library.csproj", "entity_library/"]
+
+RUN dotnet restore "itscode.sln"
+
+COPY ["services/api/.", "./"]
+
+WORKDIR "/src/api-ITSCode"
+RUN dotnet publish "api-ITSCode.csproj" -c Release -o /app/publish /p:UseAppHost=false
+
+FROM mcr.microsoft.com/dotnet/aspnet:8.0
+WORKDIR /app
+COPY --from=build /app/publish .
+EXPOSE 80
+ENTRYPOINT ["dotnet", "api-ITSCode.dll"]
