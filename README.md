@@ -104,12 +104,16 @@ Este proyecto ha sido posible gracias al esfuerzo y dedicación de las siguiente
 
 ### Desarrollo Principal
 
-*   **[Nombre del Desarrollador 1]** - [Rol, ej. Backend (.NET), Frontend (React), etc.] - [GitHub](enlace-opcional)
-*   **[Nombre del Desarrollador 2]** - [Rol] - [GitHub](enlace-opcional)
-*   **[Nombre del Desarrollador 3]** - [Rol] - [GitHub](enlace-opcional)
+*   **Carlos Hernandez** - [Backend (.NET)] - [Contacto](mailto:carlos.hernandez@itscordoba.edu.ar)
+*   **Santiago Rinaldi** - [Dashboard (React)] - [Contacto](mailto:santiago-rinaldi@itscordoba.edu.ar)
+*   **Emiliano Almirón** - [Frontend (Vanilla JS)] - [Contacto](mailto:emiliano.almiron@itscordoba.edu.ar)
 
 ### Monorepo
 
-*   **[Luis Romano]** - Configuración de Docker y orquestación con Docker Compose.
+*   **Luis Romano** - [Configuración de Docker y orquestación con Docker Compose] - [Contacto](mailto:luisromano@gmail.com)
+
+
+
+
 
 
